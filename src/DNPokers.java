@@ -10,11 +10,11 @@ public class DNPokers {
 
 	public DNPokers() {
 		for (int i=0; i<5; i++) {
-//			poker[i] = new DNPoker();
-//			poker[i].Reset();
+			poker[i] = new DNPoker();
+			poker[i].Reset();
 			niu_poker_index[i] = -1;
 		}
-		max_poker = null;
+		max_poker = new DNPoker();
 		dn_type = DN_TYPE.MEI_NIU;
 		dn_type = 1;
 		dn_player_select_type = DN_TYPE.MEI_NIU;
@@ -51,7 +51,7 @@ public class DNPokers {
 		for(int i = 0;i < 3;i++)
 			for(int j = i+1;j < 4;j++)
 				for(int k = j+1;k < 5;k++)
-					if((poker[i].poker_value+poker[j].poker_value+poker[k].poker_value)%10==0)
+					if((poker[i].getRealValue()+poker[j].getRealValue()+poker[k].getRealValue())%10==0)
 					{
 						ifHasNiu = true;
 						temp1 = i;
@@ -74,7 +74,9 @@ public class DNPokers {
 					b = index;
 				}
 			}
-			dn_type = (byte) ((byte)(poker[a].poker_value + poker[b].poker_value)%10);
+			dn_type = (byte) ((byte)(poker[a].getRealValue() + poker[b].getRealValue())%10);
+			if(dn_type==0)
+				dn_type = 10;
 		}
 		
 		if(isEqualFour(poker[0].poker_value, poker[1].poker_value, poker[2].poker_value, poker[3].poker_value)==true)
@@ -102,12 +104,7 @@ public class DNPokers {
 
 		int sum = 0;
 		for (int i = 0; i < 5; i++) {
-			if(poker[i].poker_value > 10)
-				sum+=10;
-			else {
-				sum+=poker[i].poker_value;
-			}
-			
+				sum+=poker[i].getRealValue();
 		}
 		if(sum<=10)
 			ifWuXiao = true;
@@ -118,7 +115,6 @@ public class DNPokers {
 			dn_type = 12;
 		if(ifWuXiao==true)
 			dn_type = 13;
-		System.out.println(dn_type);
 		return dn_type;
 	}
 	boolean isEqualFour(byte a,byte b,byte c,byte d)

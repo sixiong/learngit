@@ -8,6 +8,7 @@ public class Main {
 	public static final byte DNPOKER_COLOR_COUNT = 4;
 	public static DNPoker pokers[] = new DNPoker[MAX_DNPOKER_COUNT];
 	public byte deal_position_ = 0;
+	public static int playerNumber = 2;
 
 	public  void initPokers(byte minPoker,byte maxPoker)//初始化牌
 	{
@@ -47,7 +48,7 @@ public class Main {
 		deal_position_ = 0;
 		return true;
 	}
-	public boolean DNDeal(DNPoker poker[])//随机发牌
+	public  boolean DNDeal(DNPoker poker[])//随机发牌
 	{
 		if (deal_position_ < 0 || deal_position_ > MAX_DNPOKER_COUNT-5)
 		{
@@ -62,13 +63,14 @@ public class Main {
 		
 		return true;
 	}
-	public DNPoker FindMaxPoker(DNPoker poker[])//寻找5张牌里面最大的一张牌
+	public  DNPoker FindMaxPoker(DNPoker []poker)//寻找5张牌里面最大的一张牌
 	{
-		DNPoker max_poker = poker[0];
+		DNPoker max_poker = new DNPoker(poker[0].poker_value,poker[0].poker_value);
+		DNPoker current_poker ;
+
 		for (int i = 1; i < 5; i++)
 		{
-			DNPoker current_poker = poker[i];
-
+			current_poker = new DNPoker(poker[i].poker_value,poker[i].poker_color);
 			if ((max_poker.poker_value < current_poker.poker_value) ||
 				(max_poker.poker_value == current_poker.poker_value && max_poker.poker_color < poker[i].poker_color)
 				)
@@ -106,13 +108,14 @@ public class Main {
 			return 1;
 		}
 	}
-	boolean ComparePokers(DNPokers poker_a, DNPokers poker_b) {
-		if (poker_a.IsTypeIdentified() == false) {
-			//FindCow(poker_a, null, null);
-		}
-		if (poker_b.IsTypeIdentified() == false) {
-			//FindCow(poker_b, null, null);
-		}
+	
+	boolean ComparePokers(DNPokers poker_a, DNPokers poker_b) {//判断poker_a是否比poker_b小
+//		if (poker_a.IsTypeIdentified() == false) {
+//			//FindCow(poker_a, null, null);
+//		}
+//		if (poker_b.IsTypeIdentified() == false) {
+//			//FindCow(poker_b, null, null);
+//		}
 		boolean a_lose = false;
 
 		//比较牛型，如果牛型相同，比较最大的手牌大小，直到花色
@@ -164,14 +167,13 @@ public class Main {
 			return 0;
 		}	
 	}
-	boolean DealPokers(DNPoker[] poker[], int playerNumber)//分配玩家并为每个玩家都分配5张牌,并求其最大牌数
+	 boolean DealPokers(DNPokers pokersFenPei[],int playerNumber)//分配玩家并为每个玩家都分配5张牌,并求其最大牌数
 	{
-		DNPokers pokersFenPei[] = new DNPokers[playerNumber];
-		
 		for (int i=0; i<playerNumber; i++) 
 		{
 			DNDeal(pokersFenPei[i].poker);
 			pokersFenPei[i].SetMaxPoker(FindMaxPoker(pokersFenPei[i].poker));
+			//FindMaxPoker(pokersFenPei[i].poker);
 		}
 		return true;
 	}
@@ -282,20 +284,39 @@ public class Main {
 
 	public static void main(String args[])
 	{
+		Main main = new Main();
+		main.initPokers((byte)1,(byte)13);
+		main.shuffle((short)360);
+		DNPokers []examples = new DNPokers[playerNumber];
+		for (int i = 0; i < examples.length; i++) {
+			examples[i] = new DNPokers();
+			for (int j = 0; j < 5; j++) {
+				examples[i].poker[j] = new DNPoker(); 
+			}
+		}
+		main.DealPokers(examples, playerNumber);
+		for (int i = 0; i < examples.length; i++) {
+			for (int j = 0; j < examples[0].poker.length; j++) {
+				System.out.println(examples[i].poker[j].poker_value+" "+examples[i].poker[j].poker_color);
+			}
+			System.out.print('\n');
+		}
+		System.out.println(examples[0].getTypeofNiuNum());
+		System.out.println(examples[1].getTypeofNiuNum());
+		System.out.println(main.ComparePokers(examples[0], examples[1]));
+		
 //		Main main = new Main();
 //		main.initPokers((byte)1,(byte)13);
 //		main.shuffle((short)360);
-		DNPokers example = new DNPokers();
-		for (int i = 0; i < 5; i++) {
-			example.poker[i] = new DNPoker((byte)i,(byte)1);
-		}
-		example.poker[0].poker_value = 1;
-		example.poker[1].poker_value = 10;
-		example.poker[2].poker_value = 10;
-		example.poker[3].poker_value = 2;
-		example.poker[4].poker_value = 9;
-		System.out.println(example.dn_type);
-		System.out.println(example.poker[1].poker_value);
-		System.out.println(example.getTypeofNiuNum());
+//		DNPokers example = new DNPokers();
+//		for (int i = 0; i < 5; i++) {
+//			example.poker[i] = new DNPoker((byte)i,(byte)1);
+//		}
+//		example.poker[0].poker_value = 1;
+//		example.poker[1].poker_value = 1;
+//		example.poker[2].poker_value = 1;
+//		example.poker[3].poker_value = 1;
+//		example.poker[4].poker_value = 2;
+//		System.out.println(example.getTypeofNiuNum());
 	}
 }

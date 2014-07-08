@@ -4,12 +4,13 @@ public class DNPoker {
 	public byte poker_color = 0;
 	public byte real_value = 0;
 
-	public DNPoker(byte byValue, byte byColor) {
-		poker_color = byColor;
-		poker_value = byValue;
+	public DNPoker(byte i, byte j) {
+		poker_color = j;
+		poker_value = i;
 	}
 	public DNPoker() {
-
+		poker_color = 0;
+		poker_value = 0;
 	}
 	public boolean IsNullPoker() 
 	{
@@ -24,7 +25,11 @@ public class DNPoker {
 	{
 		if (poker_value>10)
 		{
-			real_value = 10;
+			this.real_value = 10;
+		}
+		else {
+			
+			real_value = poker_value;
 		}
 		return real_value;
 	}
