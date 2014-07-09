@@ -2,6 +2,7 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Main {
 
@@ -14,7 +15,7 @@ public class Main {
 	public List<DNPoker> list = new ArrayList<DNPoker>();
 
 	public byte poker_Num_Left = MAX_DNPOKER_VALUE;
-	public static int playerNumber = 1;
+	public static int playerNumber = 2;
 	public int[] indexOfThree = new int[3];
 	public int[] indexOfTwo = new int[2];
 
@@ -31,7 +32,6 @@ public class Main {
 			pokers[i] = new DNPoker(byValue, byColor);
 		}
 	}
-
 	public boolean shuffle(short iTimes)// 随机洗牌
 	{
 
@@ -51,14 +51,14 @@ public class Main {
 		}
 		for (int j = 0; j < pokers.length; j++) {
 			list.add(pokers[j]);
-			System.out.println(list.get(j).poker_value + " "
-					+ list.get(j).poker_color);
+//			System.out.println(list.get(j).poker_value + " "
+//					+ list.get(j).poker_color);
 		}
 		poker_Num_Left = MAX_DNPOKER_VALUE;
-		System.out.println("\n");
+//		System.out.println("\n");
 		return true;
 	}
-
+	
 	public boolean DNDeal(DNPoker poker[])// 随机发牌
 	{
 		if (poker_Num_Left < 5)
@@ -71,7 +71,7 @@ public class Main {
 		return true;
 	}
 
-	public boolean DNDeal(DNPoker poker[], byte niu_type)// 特殊牌型发牌(牛丁~牛牛)都可以
+	public boolean DNDeal(DNPoker poker[], int niu_type)// 特殊牌型发牌(牛丁~小五)都可以
 	{
 		if (poker_Num_Left < 5)
 			return false;
@@ -94,33 +94,33 @@ public class Main {
 				}
 			}
 		} else if (niu_type == 11) {
-				int k = 0;
-				for (int j = 1; j < 14; j++) {
-					if (count_list(j)==4) {
-						k = j;
-						break;
-					}
+			int k = 0;
+			for (int j = 1; j < 14; j++) {
+				if (count_list(j) == 4) {
+					k = j;
+					break;
 				}
-				for (int i = 0; i < poker.length - 1; i++) {
-					poker[i].poker_value = (byte) k;
-					poker[i].poker_color = (byte) (i+1);
+			}
+			for (int i = 0; i < poker.length - 1; i++) {
+				poker[i].poker_value = (byte) k;
+				poker[i].poker_color = (byte) (i + 1);
+			}
+			for (int i = 0; i < list.size(); i++) {
+				if (list.get(i).poker_value != k) {
+					poker[4] = list.get(i);
+					break;
 				}
-				for (int i = 0; i < list.size(); i++) {
-					if (list.get(i).poker_value!=k) {
-						poker[4] = list.get(i);
-						break;
-					}
-				}
-				for (int i = 0; i < poker.length; i++) {
-					list.remove(poker[i]);
-				}
+			}
+			for (int i = 0; i < poker.length; i++) {
+				list.remove(poker[i]);
+			}
 		} else if (niu_type == 12) {
 			byte index = 0;
 			for (int i = 0; i < list.size(); i++) {
-				if (list.get(i).getRealValue()==10) {
+				if (list.get(i).getRealValue() == 10) {
 					poker[index] = list.get(i);
 					index++;
-					if (index==5) {
+					if (index == 5) {
 						break;
 					}
 				}
@@ -129,7 +129,7 @@ public class Main {
 				list.remove(poker[i]);
 			}
 		} else if (niu_type == 13) {
-			if(HuiSuabcde(poker)==true)
+			if (HuiSuabcde(poker) == true)
 				for (int i = 0; i < poker.length; i++) {
 					list.remove(poker[i]);
 				}
@@ -139,8 +139,8 @@ public class Main {
 		}
 		return true;
 	}
-	public boolean HuiSuabcde(DNPoker[] poker)
-	{
+
+	public boolean HuiSuabcde(DNPoker[] poker) {
 		int indexOfb = 0;
 		int indexOfc = 0;
 		int indexOfd = 0;
@@ -148,61 +148,58 @@ public class Main {
 		int indexOfa = 0;
 		indexOfa = FirstLessSix();
 		poker[0] = list.get(indexOfa);
-		
-		for (int i = indexOfa+1; i < list.size(); i++) {
-			if((poker[0].poker_value+list.get(i).poker_value)<=7)
-			{
+
+		for (int i = indexOfa + 1; i < list.size(); i++) {
+			if ((poker[0].poker_value + list.get(i).poker_value) <= 7) {
 				indexOfb = i;
 				break;
 			}
 		}
-		if(indexOfb==0)
-		{
+		if (indexOfb == 0) {
 			System.out.println("indexOfb==0!");
 			return false;
 		}
-		
+
 		else {
 			poker[1] = list.get(indexOfb);
-			for (int i = indexOfb+1; i < list.size(); i++) {
-				if((poker[0].getRealValue()+poker[1].getRealValue()+list.get(i).getRealValue())<=8)
-				{
-					indexOfc= i;
+			for (int i = indexOfb + 1; i < list.size(); i++) {
+				if ((poker[0].getRealValue() + poker[1].getRealValue() + list
+						.get(i).getRealValue()) <= 8) {
+					indexOfc = i;
 					break;
 				}
 			}
-			if (indexOfc==0) {
+			if (indexOfc == 0) {
 				System.out.println("indexOfc==0!");
 				return false;
-			}
-			else{
-				poker[2]= list.get(indexOfc);
-				for (int i = indexOfc+1; i < list.size(); i++) {
-					if((poker[0].getRealValue()+poker[1].getRealValue()+poker[2].getRealValue()+list.get(i).getRealValue())<=9)
-					{
-						indexOfd= i;
+			} else {
+				poker[2] = list.get(indexOfc);
+				for (int i = indexOfc + 1; i < list.size(); i++) {
+					if ((poker[0].getRealValue() + poker[1].getRealValue()
+							+ poker[2].getRealValue() + list.get(i)
+							.getRealValue()) <= 9) {
+						indexOfd = i;
 						break;
 					}
 				}
-				if (indexOfd==0) {
+				if (indexOfd == 0) {
 					return false;
-				}
-				else
-				{
+				} else {
 					poker[3] = list.get(indexOfd);
-	
-					for (int i = indexOfd+1; i < list.size(); i++) {
-						if((poker[0].getRealValue()+poker[1].getRealValue()+poker[2].getRealValue()+poker[3].getRealValue()+list.get(i).getRealValue())<=10)
-						{
-							indexOfe= i;
+
+					for (int i = indexOfd + 1; i < list.size(); i++) {
+						if ((poker[0].getRealValue() + poker[1].getRealValue()
+								+ poker[2].getRealValue()
+								+ poker[3].getRealValue() + list.get(i)
+								.getRealValue()) <= 10) {
+							indexOfe = i;
 							break;
 						}
 					}
-					if (indexOfe==0) {
+					if (indexOfe == 0) {
 						return false;
-					}
-					else {
-		
+					} else {
+
 						poker[4] = list.get(indexOfe);
 						return true;
 					}
@@ -210,27 +207,28 @@ public class Main {
 			}
 		}
 	}
-	public int FirstLessSix()
-	{
+
+	public int FirstLessSix() {
 		int num = 0;
 		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getRealValue()<=6) {
+			if (list.get(i).getRealValue() <= 6) {
 				num = i;
-				break ; 
+				break;
 			}
 		}
 		return num;
 	}
-	public byte count_list(int j)
-	{
+
+	public byte count_list(int j) {
 		byte num = 0;
 		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).poker_value==j) {
+			if (list.get(i).poker_value == j) {
 				num++;
 			}
 		}
-		return num;	
+		return num;
 	}
+
 	public void OneToTen(DNPoker[] poker) {
 
 		poker[3] = list.get(indexOfTwo[0]);
@@ -243,7 +241,9 @@ public class Main {
 
 	public boolean HuiSuTwo(int a, int b, int niu_num) {
 		DNPoker poker1, poker2;
-
+		if (niu_num==10) {
+			niu_num = 0;
+		}
 		poker1 = list.get(a);
 		int i = b;
 		while (i < list.size()) {
@@ -376,15 +376,21 @@ public class Main {
 		}
 	}
 
-	boolean DealPokers(DNPokers pokersFenPei[], int playerNumber)// 分配玩家并为每个玩家都分配5张牌,并求其最大牌数
+	boolean DealPokers(DNPokers pokersFenPei[], int playerNumber,int type)// 分配玩家并为每个玩家都分配5张牌,并求其最大牌数
 	{
+		if (type==0) {
 		for (int i = 0; i < playerNumber; i++) {
-			//DNDeal(pokersFenPei[i].poker);
-			DNDeal(pokersFenPei[i].poker, (byte) 13);
-			//DNDeal(pokersFenPei[i].poker, (byte) 12);
+			DNDeal(pokersFenPei[i].poker);
 			pokersFenPei[i].SetMaxPoker(FindMaxPoker(pokersFenPei[i].poker));
-			// FindMaxPoker(pokersFenPei[i].poker);
+			}
 		}
+		else{
+			for (int i = 0; i < playerNumber; i++) {
+				DNDeal(pokersFenPei[i].poker, type);
+				pokersFenPei[i].SetMaxPoker(FindMaxPoker(pokersFenPei[i].poker));
+			}
+		}
+		
 		return true;
 	}
 
@@ -437,9 +443,9 @@ public class Main {
 		return type;
 	}
 
-	String GetDNType(byte tType) {
+	String GetDNType(byte type2) {
 		String type = "没牛";
-		switch (tType) {
+		switch (type2) {
 		case 0:
 			type = "没牛";
 			break;
@@ -488,7 +494,27 @@ public class Main {
 		}
 		return type;
 	}
-
+	String GetColorType(byte tType) {
+		String type = "";
+		switch (tType) {
+		case 1:
+			type = "方块";
+			break;
+		case 2:
+			type = "樱桃";
+			break;
+		case 3:
+			type = "桃花";
+			break;
+		case 4:
+			type = "黑桃";
+			break;
+		default:
+			type = "";
+			break;
+		}
+		return type;
+	}
 	public static void main(String args[]) {
 		Main main = new Main();
 		main.initPokers((byte) 1, (byte) 13);
@@ -496,34 +522,45 @@ public class Main {
 		DNPokers[] examples = new DNPokers[playerNumber];
 		for (int i = 0; i < examples.length; i++) {
 			examples[i] = new DNPokers();
-			for (int j = 0; j < 5; j++) {
-				examples[i].poker[j] = new DNPoker();
-			}
+//			for (int j = 0; j < 5; j++){
+//				examples[i].poker[j] = new DNPoker();
+//			}
 		}
-		main.DealPokers(examples, playerNumber);
+		System.out.println("先开始为两个玩家顺序发牌！(非特殊牌型)");
+		main.DealPokers(examples, playerNumber,0);
 		for (int i = 0; i < examples.length; i++) {
-			for (int j = 0; j < examples[0].poker.length; j++) {
-				System.out.println(examples[i].poker[j].poker_value + " "
-						+ examples[i].poker[j].poker_color);
+			if (i==0) {
+				System.out.println("玩家甲(闲):");
 			}
-			System.out.print('\n');
+			else {
+				System.out.println("玩家乙(庄):");
+			}
+			for (int j = 0; j < examples[i].poker.length; j++) {
+				System.out.println(main.GetColorType(examples[i].poker[j].poker_color)+examples[i].poker[j].poker_value + " ");
+			}
+			System.out.println("牌型："+main.GetDNType(examples[i].getTypeofNiuNum()));
+			System.out.println("");
 		}
-		System.out.println(examples[0].getTypeofNiuNum());
-		// System.out.println(examples[1].getTypeofNiuNum());
-		// System.out.println(main.ComparePokers(examples[0], examples[1]));
-
-		// Main main = new Main();
-		// main.initPokers((byte)1,(byte)13);
-		// main.shuffle((short)360);
-		// DNPokers example = new DNPokers();
-		// for (int i = 0; i < 5; i++) {
-		// example.poker[i] = new DNPoker((byte)i,(byte)1);
-		// }
-		// example.poker[0].poker_value = 2;
-		// example.poker[1].poker_value = 5;
-		// example.poker[2].poker_value = 7;
-		// example.poker[3].poker_value = 4;
-		// example.poker[4].poker_value = 5;
-		// System.out.println(example.getTypeofNiuNum());
+		boolean flag = false;
+		flag = main.ComparePokers(examples[0], examples[1]);
+		System.out.println("比较结果:");
+		if (flag == true) {
+			System.out.println("乙胜利！");
+		}
+		else {
+			System.out.println("甲胜利！");
+		}
+		DNPokers[] vips = new DNPokers[1];
+		for (int i = 0; i < vips.length; i++) {
+			vips[i] = new DNPokers();
+		}
+		System.out.println("我是VIP,我要选择得到特殊牌型！输入牌型值：");
+		Scanner sc = new Scanner(System.in); 
+		int type = sc.nextInt();
+		main.DealPokers(vips, 1,type);
+		System.out.println("所抽牌型"+main.GetDNType((byte)type)+"如下所示:");
+		for (int i = 0; i < vips[0].poker.length; i++) {
+			System.out.println(main.GetColorType(vips[0].poker[i].poker_color)+vips[0].poker[i].poker_value + " ");
+		}
 	}
 }

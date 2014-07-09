@@ -20,11 +20,6 @@ public class DNPokers {
 		dn_player_select_type = DN_TYPE.MEI_NIU;
 	}
 
-	boolean HasPoker()
-	{
-		return !(poker[0].IsNullPoker() || poker[1].IsNullPoker() || poker[2].IsNullPoker()|| poker[3].IsNullPoker()|| poker[4].IsNullPoker());
-	}
-
 	void SetPoker( DNPoker newPokers[] ) 
 	{
 		for(int i = 0;i < 5;i++)
@@ -33,13 +28,7 @@ public class DNPokers {
 	void SetMaxPoker(DNPoker p) {
 		max_poker = p;
 	}
-	void SetNiuPokerIndex(int niuPokerIndex[]) {
-		for(int i = 0;i < 5;i++)
-			niu_poker_index[i] = niuPokerIndex[i];
-	}
-	boolean IsTypeIdentified() {
-		return max_poker != null;
-	}
+
 	public byte getTypeofNiuNum()
 	{
 		boolean ifHasNiu = false;
