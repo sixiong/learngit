@@ -94,15 +94,26 @@ public class Main {
 				}
 			}
 		} else if (niu_type == 11) {
-			for (int i = 0; i < list.size()-4; i++) {
-				for (int j = i+1; j < list.size()-3; j++) {
-					for (int j2 = j+1; j2 < list.size()-3; j2++) {
-						for (int k = 0; k < poker.length; k++) {
-							
-						}
+				int k = 0;
+				for (int j = 1; j < 14; j++) {
+					if (count_list(j)==4) {
+						k = j;
+						break;
 					}
 				}
-			}
+				for (int i = 0; i < poker.length - 1; i++) {
+					poker[i].poker_value = (byte) k;
+					poker[i].poker_color = (byte) (i+1);
+				}
+				for (int i = 0; i < list.size(); i++) {
+					if (list.get(i).poker_value!=k) {
+						poker[4] = list.get(i);
+						break;
+					}
+				}
+				for (int i = 0; i < poker.length; i++) {
+					list.remove(poker[i]);
+				}
 		} else if (niu_type == 12) {
 			byte index = 0;
 			for (int i = 0; i < list.size(); i++) {
@@ -114,12 +125,112 @@ public class Main {
 					}
 				}
 			}
+			for (int i = 0; i < poker.length; i++) {
+				list.remove(poker[i]);
+			}
 		} else if (niu_type == 13) {
-
+			if(HuiSuabcde(poker)==true)
+				for (int i = 0; i < poker.length; i++) {
+					list.remove(poker[i]);
+				}
+			else {
+				System.out.println("Not Found!");
+			}
 		}
 		return true;
 	}
-
+	public boolean HuiSuabcde(DNPoker[] poker)
+	{
+		int indexOfb = 0;
+		int indexOfc = 0;
+		int indexOfd = 0;
+		int indexOfe = 0;
+		int indexOfa = 0;
+		indexOfa = FirstLessSix();
+		poker[0] = list.get(indexOfa);
+		
+		for (int i = indexOfa+1; i < list.size(); i++) {
+			if((poker[0].poker_value+list.get(i).poker_value)<=7)
+			{
+				indexOfb = i;
+				break;
+			}
+		}
+		if(indexOfb==0)
+		{
+			System.out.println("indexOfb==0!");
+			return false;
+		}
+		
+		else {
+			poker[1] = list.get(indexOfb);
+			for (int i = indexOfb+1; i < list.size(); i++) {
+				if((poker[0].getRealValue()+poker[1].getRealValue()+list.get(i).getRealValue())<=8)
+				{
+					indexOfc= i;
+					break;
+				}
+			}
+			if (indexOfc==0) {
+				System.out.println("indexOfc==0!");
+				return false;
+			}
+			else{
+				poker[2]= list.get(indexOfc);
+				for (int i = indexOfc+1; i < list.size(); i++) {
+					if((poker[0].getRealValue()+poker[1].getRealValue()+poker[2].getRealValue()+list.get(i).getRealValue())<=9)
+					{
+						indexOfd= i;
+						break;
+					}
+				}
+				if (indexOfd==0) {
+					return false;
+				}
+				else
+				{
+					poker[3] = list.get(indexOfd);
+	
+					for (int i = indexOfd+1; i < list.size(); i++) {
+						if((poker[0].getRealValue()+poker[1].getRealValue()+poker[2].getRealValue()+poker[3].getRealValue()+list.get(i).getRealValue())<=10)
+						{
+							indexOfe= i;
+							break;
+						}
+					}
+					if (indexOfe==0) {
+						return false;
+					}
+					else {
+		
+						poker[4] = list.get(indexOfe);
+						return true;
+					}
+				}
+			}
+		}
+	}
+	public int FirstLessSix()
+	{
+		int num = 0;
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getRealValue()<=6) {
+				num = i;
+				break ; 
+			}
+		}
+		return num;
+	}
+	public byte count_list(int j)
+	{
+		byte num = 0;
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).poker_value==j) {
+				num++;
+			}
+		}
+		return num;	
+	}
 	public void OneToTen(DNPoker[] poker) {
 
 		poker[3] = list.get(indexOfTwo[0]);
@@ -268,8 +379,9 @@ public class Main {
 	boolean DealPokers(DNPokers pokersFenPei[], int playerNumber)// 分配玩家并为每个玩家都分配5张牌,并求其最大牌数
 	{
 		for (int i = 0; i < playerNumber; i++) {
-			// DNDeal(pokersFenPei[i].poker);
-			DNDeal(pokersFenPei[i].poker, (byte) 12);
+			//DNDeal(pokersFenPei[i].poker);
+			DNDeal(pokersFenPei[i].poker, (byte) 13);
+			//DNDeal(pokersFenPei[i].poker, (byte) 12);
 			pokersFenPei[i].SetMaxPoker(FindMaxPoker(pokersFenPei[i].poker));
 			// FindMaxPoker(pokersFenPei[i].poker);
 		}
