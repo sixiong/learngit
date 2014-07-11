@@ -3,21 +3,13 @@ public class DNPokers {
 
 	public DNPoker poker[] =  new DNPoker[5];
 	byte dn_type;
-	byte dn_player_select_type;
-
 	DNPoker max_poker;
-	int niu_poker_index[] = new int[5];
-
 	public DNPokers() {
-		for (int i=0; i<5; i++) {
-			poker[i] = new DNPoker();
-			poker[i].Reset();
-			niu_poker_index[i] = -1;
+		for (int i = 0; i < poker.length; i++) {
+			poker[i] = null;
 		}
-		max_poker = new DNPoker();
+		max_poker =null;
 		dn_type = DN_TYPE.MEI_NIU;
-		dn_type = 1;
-		dn_player_select_type = DN_TYPE.MEI_NIU;
 	}
 
 	void SetPoker( DNPoker newPokers[] ) 
@@ -29,7 +21,7 @@ public class DNPokers {
 		max_poker = p;
 	}
 
-	public byte getTypeofNiuNum()
+	public  byte getTypeofNiuNum()
 	{
 		boolean ifHasNiu = false;
 		boolean ifZhaDan = false;
@@ -90,14 +82,18 @@ public class DNPokers {
 			}
 		if(flagTemp==false)
 			ifWuHua = true;
-
+		else {
+			ifWuHua = false;
+		}
 		int sum = 0;
 		for (int i = 0; i < 5; i++) {
 				sum+=poker[i].getRealValue();
 		}
 		if(sum<=10)
 			ifWuXiao = true;
-		
+		else {
+			ifWuXiao = false;
+		}
 		if(ifZhaDan==true)
 			dn_type = 11;
 		if(ifWuHua==true)

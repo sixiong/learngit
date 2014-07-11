@@ -5,16 +5,15 @@ public class DNPoker {
 	public byte real_value = 0;
 
 	public DNPoker(byte i, byte j) {
+		if (i>13||i<1||j<1||j>4) {
+			Reset();
+		}
 		poker_color = j;
 		poker_value = i;
 	}
 	public DNPoker() {
 		poker_color = 0;
 		poker_value = 0;
-	}
-	public boolean IsNullPoker() 
-	{
-		return (poker_value==0||poker_color==0);
 	}
 	public void Reset()
 	{
